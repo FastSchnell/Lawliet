@@ -1,13 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import json
 from wsgiref.simple_server import make_server
 
 routes = [
-    ('/ping', 'ping.views.ping')
+    ('/ping', 'ping.views.ping'),
+    ('/json', 'ping.views.res_json')
 ]
 
 
-class app_1:
+class start:
     "这是一个web框架"
     def __init__(self, environ, start_response):
         self.environ = environ
@@ -26,17 +28,21 @@ class app_1:
                         print from_str
                         exec 'from {} import {}'.format(from_str, import_str)
                         exec 'mydef={}()'.format(import_str)
+                        try:
+                            if mydef[iter(mydef).next()]:
+                                return self.res_text(json.dumps(mydef), 'application/json')
+                        except:
+                            pass
                         return self.res_text(mydef)
                     except:
                         return self.error_code()
                 else:
                     return self.method_not_allowed()
-            else:
-                return self.notfound()
+        return self.notfound()
 
-    def res_text(self, res):
-        status = '200 OK'
-        response_headers = [('Content-type', 'text/plain')]
+    def res_text(self, res, response='text/plain'):
+        status='200 OK'
+        response_headers=[('Content-type', response)]
         self.start(status, response_headers)
         yield res
 
@@ -58,7 +64,7 @@ class app_1:
         self.start(status, response_headers)
         yield '{"errcode": 405, "errmsg": "Method Not Allowed"}'
 
-httpd = make_server('', 5001, app_1)
+httpd = make_server('', 5000, start)
 sa = httpd.socket.getsockname()
-print u'跑起来了http://{0}:{1}/'.format(*sa)
+print u'跑起来了==> http://{0}:{1}/'.format(*sa)
 httpd.serve_forever()
