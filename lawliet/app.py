@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import json
 from wsgiref.simple_server import make_server
-
+from .request import get_input
 
 class Route(object):
-    """这是一个web框架"""
+    """这是url调度功能"""
     urls = tuple()
     def __init__(self, environ, start_response):
         self.environ = environ
@@ -13,6 +13,10 @@ class Route(object):
     def __iter__(self):
         path = self.environ['PATH_INFO']
         method = self.environ['REQUEST_METHOD']
+        #len_input = int(self.environ['CONTENT_LENGTH'])
+        #print self.environ
+        #print self.environ['wsgi.input'].read(len_input)
+
         for r in self.urls:
             if path == r[0]:
                 if len(r) == 2 or method in r[2]:
@@ -20,7 +24,11 @@ class Route(object):
                         import_str = r[1].split('.')[-1]
                         from_str = r[1][:-(len(import_str)+1)]
                         exec 'from {} import {}'.format(from_str, import_str)
-                        exec 'mydef={}()'.format(import_str)
+                        try:
+                            exec 'mydef={}()'.format(import_str)
+                        except:
+                            request = get_input(**self.environ)
+                            exec 'mydef={}(request)'.format(import_str)
                         try:
                             if str(type(mydef)) == "<type 'dict'>":
                                 return self.res_text(json.dumps(mydef), 'application/json')
@@ -63,7 +71,7 @@ class Route(object):
         yield '{"errcode": 405, "errmsg": "Method Not Allowed"}'
 
 
-def run(ip='', port=5000):
+def run(ip='127.0.0.1', port=5000):
     httpd = make_server(ip, port, Route)
     sa = httpd.socket.getsockname()
     print u'跑起来了==> http://{0}:{1}/'.format(*sa)

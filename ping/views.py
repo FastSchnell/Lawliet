@@ -13,8 +13,8 @@ xml_str = """
 def ping():
     return '1111111'
 
-def res_json():
-    return {'a': '11', 'b':999}
+def res_json(request):
+    return request
 
 def test_response():
     return response(xml_str, 'application/xml')
