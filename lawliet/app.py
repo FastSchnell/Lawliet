@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 from wsgiref.simple_server import make_server
-from .request import get_input
+from .request import Request
 
 class Route(object):
     """这是url调度功能"""
@@ -13,9 +13,8 @@ class Route(object):
     def __iter__(self):
         path = self.environ['PATH_INFO']
         method = self.environ['REQUEST_METHOD']
-        #len_input = int(self.environ['CONTENT_LENGTH'])
+
         #print self.environ
-        #print self.environ['wsgi.input'].read(len_input)
 
         for r in self.urls:
             if path == r[0]:
@@ -27,15 +26,15 @@ class Route(object):
                         try:
                             exec 'mydef={}()'.format(import_str)
                         except:
-                            request = get_input(**self.environ)
+                            request = Request(self.environ)
                             exec 'mydef={}(request)'.format(import_str)
                         try:
-                            if str(type(mydef)) == "<type 'dict'>":
+                            if type(mydef) == type({}):
                                 return self.res_text(json.dumps(mydef), 'application/json')
                         except:
                             pass
                         try:
-                            if str(type(mydef)) == "<type 'list'>":
+                            if type(mydef) == type([]):
                                 return self.res_text(mydef[0], mydef[1])
                         except:
                             pass

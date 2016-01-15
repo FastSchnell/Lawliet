@@ -14,7 +14,7 @@ def ping():
     return '1111111'
 
 def res_json(request):
-    return request
+    return request.params('qqq')
 
 def test_response():
     return response(xml_str, 'application/xml')

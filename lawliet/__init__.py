@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 __author__ = 'monomer'
 from .app import Route
-from .request import get_input
 
 class Routes(object):
     def __init__(self, *args):
