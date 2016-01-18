@@ -1,2 +1,2 @@
 # Lawliet
-<h2>this is a web 框架</h2>
+<h2>这只是个玩具</h2>
