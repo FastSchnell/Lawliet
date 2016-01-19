@@ -3,6 +3,7 @@ import json
 from wsgiref.simple_server import make_server
 from .request import Request
 
+
 class Route(object):
     """这是url调度功能"""
     urls = tuple()
@@ -30,12 +31,24 @@ class Route(object):
                             exec 'mydef={}(request)'.format(import_str)
                         try:
                             if type(mydef) == type({}):
-                                return self.res_text(json.dumps(mydef), 'application/json')
+                                return self.res_text(json.dumps(mydef), headers=[('Content-type', 'text/plain')])
                         except:
                             pass
                         try:
                             if type(mydef) == type([]):
-                                return self.res_text(mydef[0], mydef[1])
+                                try:
+                                    res = mydef[0]['res']
+                                except:
+                                    res = None
+                                try:
+                                    status = mydef[0]['status']
+                                except:
+                                    status = None
+                                try:
+                                    headers = mydef[0]['headers']
+                                except:
+                                    headers = None
+                                return self.res_text(res, status, headers)
                         except:
                             pass
                         return self.res_text(mydef)
@@ -45,10 +58,14 @@ class Route(object):
                     return self.method_not_allowed()
         return self.not_found()
 
-    def res_text(self, res, response='text/plain'):
-        status='200 OK'
-        response_headers=[('Content-type', response)]
-        self.start(status, response_headers)
+    def res_text(self, res=None, status=None, headers=None):
+        if status is None:
+            status='200 OK'
+        if headers is None:
+            headers=[('Content-type', 'text/plain')]
+        self.start(status, headers)
+        if res is None:
+            yield ''
         yield res
 
     def error_code(self):
@@ -59,7 +76,7 @@ class Route(object):
 
     def not_found(self):
         status = '404 NOT FOUND'
-        response_headers = [('Content-type', 'application/json')]
+        response_headers = [('Content-type', 'application/json'), ('Location','http://baidu.com')]
         self.start(status, response_headers)
         yield '{"errcode": 404, "errmsg": "page not find"}'
 
