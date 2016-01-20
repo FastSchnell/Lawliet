@@ -31,7 +31,7 @@ class Route(object):
                             exec 'mydef={}(request)'.format(import_str)
                         try:
                             if type(mydef) == type({}):
-                                return self.res_text(json.dumps(mydef), headers=[('Content-type', 'text/plain')])
+                                return self.res_text(json.dumps(mydef), headers=[('Content-type', 'application/json')])
                         except:
                             pass
                         try:
@@ -62,11 +62,16 @@ class Route(object):
         if status is None:
             status='200 OK'
         if headers is None:
-            headers=[('Content-type', 'text/plain')]
+            if type(res) == type({}):
+                res = json.dumps(res)
+                headers=[('Content-type', 'application/json')]
+            else:
+                headers=[('Content-type', 'text/plain')]
         self.start(status, headers)
         if res is None:
             yield ''
-        yield res
+        else:
+            yield res
 
     def error_code(self):
         status = '500 INTERNAL SERVER ERROR'
@@ -76,7 +81,7 @@ class Route(object):
 
     def not_found(self):
         status = '404 NOT FOUND'
-        response_headers = [('Content-type', 'application/json'), ('Location','http://baidu.com')]
+        response_headers = [('Content-type', 'application/json')]
         self.start(status, response_headers)
         yield '{"errcode": 404, "errmsg": "page not find"}'
 

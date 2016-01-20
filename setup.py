@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Lawliet
 -------------
@@ -7,9 +8,8 @@ from setuptools import setup
 
 setup(
     name='lawliet',
-    version='2.1.0',
-    description='a web framework',
-    long_description='a web framework',
+    version='2.1.1',
+    description=u'这是一个给开源添乱的项目',
     author='Monomer Xu',
     author_email='fing@easymail.com.cn',
     url='https://github.com/fing520/Lawliet',
