@@ -4,7 +4,7 @@ Lawliet
 -------------
 you can response json like this "return {}"
 """
-from setuptools import setup
+from distutils.core import setup
 
 setup(
     name='lawliet',
@@ -16,8 +16,6 @@ setup(
     py_modules=['lawliet'],
     packages=['lawliet'],
     license='MIT',
-    zip_safe=False,
-    include_package_data=True,
     platforms='any',
     classifiers=[
         'Environment :: Web Environment',

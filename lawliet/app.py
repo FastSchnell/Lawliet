@@ -95,5 +95,5 @@ class Route(object):
 def run(ip='127.0.0.1', port=5000):
     httpd = make_server(ip, port, Route)
     sa = httpd.socket.getsockname()
-    print u'跑起来了==> http://{0}:{1}/'.format(*sa)
+    print 'running ==> http://{0}:{1}/'.format(*sa)
     httpd.serve_forever()

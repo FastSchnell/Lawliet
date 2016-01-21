@@ -1,5 +1,5 @@
 #from lawliet.response import response
-from lawliet import Response, redirect, abort
+from lawliet import Response, redirect, abort, json
 
 xml_str = """
  <xml>
@@ -12,10 +12,12 @@ xml_str = """
  </xml>
 """
 def ping():
-    return {11:22}
+    a = {"aa":22}
+    b = str(a)
+    return json(b)
 
 def res_json(request):
     return request.params('qqq')
 
 def test_response():
-    return Response(xml_str, headers={'Content-type': 'application/xml'})
+    return Response(status=404)
