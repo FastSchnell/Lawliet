@@ -8,13 +8,13 @@ from distutils.core import setup
 
 setup(
     name='lawliet',
-    version='2.1.1',
+    version='2.1.4',
     description=u'这是一个给开源添乱的项目',
     author='Monomer Xu',
     author_email='fing@easymail.com.cn',
     url='https://github.com/fing520/Lawliet',
     py_modules=['lawliet'],
-    packages=['lawliet'],
+    packages=['lawliet', 'lawliet.handler', 'lawliet.tools'],
     license='MIT',
     platforms='any',
     classifiers=[
