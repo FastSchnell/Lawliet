@@ -9,5 +9,9 @@ def str_json(str):
         str = re.sub('\'', '\"', str)
         return json.loads(str)
     except:
+        pass
+    try:
+        pass
+    except:
         return {'errcode':'1005', 'errmsg':'json() error'}
 
