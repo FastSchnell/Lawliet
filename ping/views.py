@@ -12,9 +12,9 @@ xml_str = """
  </xml>
 """
 def ping():
-    a = {"aa":22}
+    a = {'aaa':22}
     b = str(a)
-    return json(b)
+    return a
 
 def res_json(request):
     return request.params('qqq')

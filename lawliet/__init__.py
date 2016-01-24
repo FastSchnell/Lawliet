@@ -18,7 +18,7 @@ def abort(code, res=None):
 def redirect(url):
     return Response(status=301, headers={"Location": url})
 
-def json(str):
+def jsons(str):
     return str_json(str)
 
 class Routes(object):
