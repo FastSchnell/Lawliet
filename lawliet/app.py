@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import json
+import logging
 from .request import Request
 
+logger = logging.getLogger(__name__)
 
 class Route(object):
     """这是url调度功能"""
@@ -66,7 +68,8 @@ class Route(object):
                         except:
                             pass
                         return self.res_text(mydef)
-                    except:
+                    except Exception as e:
+                        logger.exception(e)
                         return self.error_code()
                 else:
                     return self.method_not_allowed()
