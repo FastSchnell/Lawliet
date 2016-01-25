@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
 import re
-import xml.etree.ElementTree as ET
 class Request(object):
 
     """获取传递数据"""
@@ -17,8 +16,6 @@ class Request(object):
             input_str = self.environ['wsgi.input'].read(len_input)
             if self.environ['CONTENT_TYPE'] == 'application/json':
                 return json.loads(input_str)
-            elif self.environ['CONTENT_TYPE'] == 'application/xml':
-                return ET.fromstring(input_str)
             return input_str
         except:
             return None

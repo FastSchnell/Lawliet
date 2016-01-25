@@ -1,3 +1,6 @@
+from lawliet import Response
+
+
 class auto_method(object):
 
     def get(self):
@@ -7,4 +10,8 @@ class auto_method(object):
         return request.get('okok')
 
     def put(self):
-        return {'method': 'PUT'}
+        headers = {'Access-Control-Allow-Origin': 'IJI',
+                   'Access-Control-Allow-Methods': 'GET',
+                   'Content-type': 'application/json'
+                   }
+        return Response('{"ss":11}', headers=headers)

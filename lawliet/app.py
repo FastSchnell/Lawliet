@@ -22,9 +22,7 @@ class Route(object):
                     try:
                         import_str = r[1].split('.')[-1]
                         from_str = r[1][:-(len(import_str)+1)]
-                        print len(r)
                         if len(r) == 2 or method in r[2]:
-                            print 'from {} import {}'.format(from_str, import_str)
                             exec 'from {} import {}'.format(from_str, import_str)
                             try:
                                 exec 'mydef={}()'.format(import_str)

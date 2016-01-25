@@ -20,8 +20,8 @@ class Res(object):
                     self.status = '{} '.format(self.status)
             dict_res['status'] = self.status
         if self.headers is not None:
+            new_headers = list()
             for i in self.headers:
-                new_headers = list()
                 new_headers.append((i, self.headers[i]))
             dict_res['headers'] = new_headers
         return [dict_res]
