@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from lawliet import Routes, app
+from lawliet import Routes, app, Route
 
-
+Route.debug = True
 Routes(
     ('/ping', 'ping.views.ping'),
     ('/字典', 'ping.views.res_json'),

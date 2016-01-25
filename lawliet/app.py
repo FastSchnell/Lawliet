@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 import json
-import logging
 from .request import Request
 
-logger = logging.getLogger(__name__)
 
 class Route(object):
     """这是url调度功能"""
+    debug = False
     urls = tuple()
     def __init__(self, environ, start_response):
         self.environ = environ
@@ -69,8 +68,10 @@ class Route(object):
                             pass
                         return self.res_text(mydef)
                     except Exception as e:
-                        logger.exception(e)
-                        return self.error_code()
+                        if self.debug in [False, '', None]:
+                            return self.error_code()
+                        else:
+                            return self.res_text(str(e))
                 else:
                     return self.method_not_allowed()
         return self.not_found()

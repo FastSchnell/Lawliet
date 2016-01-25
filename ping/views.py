@@ -1,5 +1,5 @@
 #from lawliet.response import response
-from lawliet import Response, redirect, abort
+from lawliet import Response, redirect, abort, json
 
 xml_str = u"""
  <xml>
