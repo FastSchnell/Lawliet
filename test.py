@@ -7,7 +7,8 @@ Routes(
     ('/字典', 'ping.views.res_json'),
     ('/json', 'ping.views.res_json'),
     ('/xml/', 'ping.views.test_response'),
-    ('/ok', 'test.ok')
+    ('/ok', 'test.ok'),
+    ('/auto_method', 'ping.auto_method.auto_method', ['AUTO'])
 )
 
 if __name__ == '__main__':

@@ -10,6 +10,7 @@ class Request(object):
         self.environ = environ
         self.data = self.get_data()
 
+
     def get_data(self):
         try:
             len_input = int(self.environ['CONTENT_LENGTH'])
@@ -21,6 +22,7 @@ class Request(object):
             return input_str
         except:
             return None
+
 
     def headers(self, header):
         http_header = re.sub('-','_',header).upper()
@@ -36,14 +38,14 @@ class Request(object):
             except:
                 return None
 
-    def params(self, param):
+
+    def get(self, param):
         query_string = self.environ['QUERY_STRING'].split('&')
-        print query_string
         param_dict = dict()
-        for i in query_string:
-            param_one = i.split('=')
-            param_dict[param_one[0]] = param_one[1]
         try:
+            for i in query_string:
+                param_one = i.split('=')
+                param_dict[param_one[0]] = param_one[1]
             return param_dict[param]
         except:
             return None

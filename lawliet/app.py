@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import json
-from wsgiref.simple_server import make_server
 from .request import Request
 
 
@@ -19,16 +18,33 @@ class Route(object):
 
         for r in self.urls:
             if path == r[0]:
-                if len(r) == 2 or method in r[2]:
+                if len(r) == 2 or method in r[2] or 'AUTO' in r[2]:
                     try:
                         import_str = r[1].split('.')[-1]
                         from_str = r[1][:-(len(import_str)+1)]
-                        exec 'from {} import {}'.format(from_str, import_str)
-                        try:
-                            exec 'mydef={}()'.format(import_str)
-                        except:
-                            request = Request(self.environ)
-                            exec 'mydef={}(request)'.format(import_str)
+                        print len(r)
+                        if len(r) == 2 or method in r[2]:
+                            print 'from {} import {}'.format(from_str, import_str)
+                            exec 'from {} import {}'.format(from_str, import_str)
+                            try:
+                                exec 'mydef={}()'.format(import_str)
+                            except:
+                                request = Request(self.environ)
+                                exec 'mydef={}(request)'.format(import_str)
+                        elif 'AUTO' in r[2]:
+                            if method == 'GET':
+                                input_def = 'get'
+                            elif method == 'POST':
+                                input_def = 'post'
+                            elif method == 'PUT':
+                                input_def = 'put'
+                            exec 'from {} import {}'.format(from_str, import_str)
+                            try:
+                                exec 'mydef={}().{}()'.format(import_str, input_def)
+
+                            except:
+                                request = Request(self.environ)
+                                exec 'mydef={}().{}(request)'.format(import_str, input_def)
                         try:
                             if type(mydef) == type({}):
                                 return self.res_text(json.dumps(mydef), headers=[('Content-type', 'application/json')])
@@ -92,8 +108,13 @@ class Route(object):
         yield '{"errcode": 405, "errmsg": "Method Not Allowed"}'
 
 
-def run(ip='127.0.0.1', port=5000):
-    httpd = make_server(ip, port, Route)
+def run(host=None, port=None):
+    if host is None:
+        host = '127.0.0.1'
+    if port is None:
+        port = 5000
+    from wsgiref.simple_server import make_server
+    httpd = make_server(host, port, Route)
     sa = httpd.socket.getsockname()
     print 'running ==> http://{0}:{1}/'.format(*sa)
     httpd.serve_forever()
