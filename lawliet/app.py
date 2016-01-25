@@ -79,15 +79,14 @@ class Route(object):
             if type(res) == type({}):
                 res = json.dumps(res)
                 headers=[('Content-type', 'application/json')]
-            elif type(res) == type(u''):
-                res = res.encode('utf-8')
-                headers=[('Content-type', 'text/plain')]
             else:
                 headers=[('Content-type', 'text/plain')]
         self.start(status, headers)
         if res is None:
             yield ''
         else:
+            if type(unicode()) == type(res):
+                res = res.encode('utf-8')
             yield res
 
     def error_code(self):

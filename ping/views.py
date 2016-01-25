@@ -1,7 +1,7 @@
 #from lawliet.response import response
 from lawliet import Response, redirect, abort
 
-xml_str = """
+xml_str = u"""
  <xml>
  <ToUserName><![CDATA[toUser]]></ToUserName>
  <FromUserName><![CDATA[fromUser]]></FromUserName>
