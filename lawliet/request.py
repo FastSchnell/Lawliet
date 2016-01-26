@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 import re
+from urllib import unquote
 class Request(object):
 
     """获取传递数据"""
@@ -37,7 +38,8 @@ class Request(object):
 
 
     def get(self, param):
-        query_string = self.environ['QUERY_STRING'].split('&')
+        q_string = unquote(self.environ['QUERY_STRING'])
+        query_string = q_string.split('&')
         param_dict = dict()
         try:
             for i in query_string:
