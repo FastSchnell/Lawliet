@@ -26,10 +26,11 @@ class Route(object):
                         if len(r) == 2 or method in r[2]:
                             exec 'from {} import {}'.format(from_str, import_str)
                             try:
-                                exec 'mydef={}()'.format(import_str)
-                            except:
                                 request = Request(self.environ)
                                 exec 'mydef={}(request)'.format(import_str)
+                            except:
+
+                                exec 'mydef={}()'.format(import_str)
                         elif 'AUTO' in r[2]:
                             if method == 'GET':
                                 input_def = 'get'
@@ -39,11 +40,12 @@ class Route(object):
                                 input_def = 'put'
                             exec 'from {} import {}'.format(from_str, import_str)
                             try:
-                                exec 'mydef={}().{}()'.format(import_str, input_def)
-
-                            except:
                                 request = Request(self.environ)
                                 exec 'mydef={}().{}(request)'.format(import_str, input_def)
+
+                            except:
+
+                                exec 'mydef={}().{}()'.format(import_str, input_def)
                         try:
                             if type(mydef) == type({}):
                                 return self.res_text(json.dumps(mydef), headers=[('Content-type', 'application/json')])
