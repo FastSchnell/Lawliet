@@ -46,3 +46,7 @@ class Request(object):
             return param_dict[param]
         except:
             return None
+
+    def environ(self):
+        return self.environ
+
