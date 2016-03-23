@@ -1,4 +1,6 @@
 import json
+
+
 def str_json(str):
     try:
         return json.loads(str)
@@ -7,6 +9,6 @@ def str_json(str):
     try:
         return eval(str)
     except:
-        return {'errcode':'1005', 'errmsg':'json() error'}
+        return {'errcode': '1005', 'errmsg': 'json() error'}
 
 

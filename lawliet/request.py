@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 import json
 import re
+
+
 class Request(object):
 
     """获取传递数据"""
     data = ''
+
     def __init__(self, environ):
         self.environ = environ
         self.data = self.get_data()
-
 
     def get_data(self):
         try:
@@ -19,7 +21,6 @@ class Request(object):
             return input_str
         except:
             return None
-
 
     def headers(self, header):
         http_header = re.sub('-','_',header).upper()
@@ -35,7 +36,6 @@ class Request(object):
             except:
                 return None
 
-
     def get(self, param):
         query_string = self.environ['QUERY_STRING'].split('&')
         param_dict = dict()
@@ -49,4 +49,3 @@ class Request(object):
 
     def environ(self):
         return self.environ
-
