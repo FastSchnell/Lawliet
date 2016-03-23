@@ -20,17 +20,19 @@ class DoCache(object):
             return None
 
     @classmethod
-    def set(cls, key, value):
+    def set(cls, key, value, times=0):
         try:
-            CACHE[key] = [value, 0]
+            CACHE[key] = [value, times]
         except:
-            pass
+            class CacheSetError(Exception): pass
+            raise CacheSetError
 
     @classmethod
-    def expire(cls,key, times):
+    def expire(cls, key, times):
         try:
             a = CACHE[key]
             a[1] = int(time.time() + int(times))
             CACHE[key] = a
         except:
-            pass
+            class CacheExpireError(Exception): pass
+            raise CacheExpireError
