@@ -1,5 +1,5 @@
 #from lawliet.response import response
-from lawliet import Response, redirect, abort
+from lawliet import Response, redirect, abort, Cache
 
 xml_str = u"""
  <xml>
@@ -11,12 +11,16 @@ xml_str = u"""
  <MsgId>1234567890123456</MsgId>
  </xml>
 """
+
+
 def ping():
-    a = {'aaa':22}
-    return a
+    Cache.set('ok', 'test')
+    Cache.expire('ok', 50)
+
 
 def res_json(request):
     return '{}{}'.format(request.get('qqq'), request.get('ok'))
+
 
 def test_response():
     return Response(xml_str, headers={'Content-type': 'application/xml'})

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from lawliet import Routes, app, Route
+from lawliet import Routes, app, Route, Cache
 
 Route.debug = True
 Routes(
@@ -16,4 +16,8 @@ if __name__ == '__main__':
 
 
 def ok():
-    return 'okokok'
+    a = Cache.get('ok')
+    if a:
+        return a
+    else:
+        return 'error'

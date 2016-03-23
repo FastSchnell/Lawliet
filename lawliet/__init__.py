@@ -2,6 +2,7 @@
 __author__ = 'monomer'
 from .app import Route
 from .handler.response import Res
+from .handler.cache import DoCache
 from .tools.json_loads import str_json
 
 
@@ -28,3 +29,7 @@ def jsons(str):
 class Routes(object):
     def __init__(self, *args):
         Route.urls = args
+
+
+class Cache(DoCache):
+    pass
