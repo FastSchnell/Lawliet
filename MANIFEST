@@ -6,5 +6,6 @@ lawliet/request.py
 lawliet/handler/__init__.py
 lawliet/handler/response.py
 lawliet/tools/__init__.py
+lawliet/tools/_cache.py
 lawliet/tools/cache.py
 lawliet/tools/json_loads.py
