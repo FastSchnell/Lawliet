@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-__author__ = 'monomer'
 from .app import Route
 from .handler.response import Res
 from .tools.cache import DoCache
+from .tools._cache import _DoCache
 from .tools.json_loads import str_json
 
 
@@ -32,4 +32,8 @@ class Routes(object):
 
 
 class Cache(DoCache):
+    pass
+
+
+class _Cache(_DoCache):
     pass
