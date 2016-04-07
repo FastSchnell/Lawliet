@@ -40,3 +40,6 @@ class _DoCache(object):
 
     def id(self):
         return id(self.CACHE)
+
+    def get_all(self):
+        return self.CACHE

@@ -42,3 +42,7 @@ class DoCache(object):
     @classmethod
     def id(cls):
         return id(CACHE)
+
+    @classmethod
+    def get_all(cls):
+        return CACHE
