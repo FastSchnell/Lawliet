@@ -30,6 +30,13 @@ class DoCache(object):
             raise CacheSetError
 
     @classmethod
+    def delete(cls, key):
+        try:
+            CACHE.pop(key)
+        except:
+            pass
+
+    @classmethod
     def expire(cls, key, times):
         try:
             a = CACHE[key]
@@ -42,3 +49,7 @@ class DoCache(object):
     @classmethod
     def id(cls):
         return id(CACHE)
+
+    @classmethod
+    def get_all(cls):
+        return CACHE

@@ -3,6 +3,10 @@ status_dict = {400: '400 BAD REQUEST', 403: '403 FORBIDDEN',
                500: '500 INTERNAL SERVER ERROR'}
 
 
+class LawDict(dict):
+    pass
+
+
 class Res(object):
 
     def __init__(self, res=None, status=None, headers=None):
@@ -11,11 +15,11 @@ class Res(object):
         self.headers = headers
 
     def response(self):
-        dict_res = dict()
+        dict_res = LawDict()
         if self.res is not None:
             dict_res['res'] = self.res
         if self.status is not None:
-            if type(self.status) == type(1):
+            if isinstance(self.status, int):
                 if self.status in status_dict:
                     self.status = status_dict[self.status]
                 else:
@@ -26,4 +30,4 @@ class Res(object):
             for i in self.headers:
                 new_headers.append((i, self.headers[i]))
             dict_res['headers'] = new_headers
-        return [dict_res]
+        return dict_res
