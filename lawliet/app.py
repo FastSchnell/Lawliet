@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 import json
 from .request import Request
+from .handler.response import LawDict
 
 
 class Route(object):
     """这是url调度功能"""
     debug = False
-    urls = tuple()
+    urls = dict()
 
     def __init__(self, environ, start_response):
         self.environ = environ
@@ -18,81 +19,80 @@ class Route(object):
 
         #print self.environ
 
-        for r in self.urls:
-            if path == r[0]:
-                if len(r) == 2 or method in r[2] or 'AUTO' in r[2]:
-                    try:
-                        import_str = r[1].split('.')[-1]
-                        from_str = r[1][:-(len(import_str)+1)]
-                        if len(r) == 2 or method in r[2]:
-                            exec 'from {} import {}'.format(from_str, import_str)
-                            try:
-                                request = Request(self.environ)
-                                exec 'mydef={}(request)'.format(import_str)
-                            except:
-
-                                exec 'mydef={}()'.format(import_str)
-                        elif 'AUTO' in r[2]:
-                            if method == 'GET':
-                                input_def = 'get'
-                            elif method == 'POST':
-                                input_def = 'post'
-                            elif method == 'PUT':
-                                input_def = 'put'
-                            exec 'from {} import {}'.format(from_str, import_str)
-                            try:
-                                request = Request(self.environ)
-                                exec 'mydef={}().{}(request)'.format(import_str, input_def)
-
-                            except:
-
-                                exec 'mydef={}().{}()'.format(import_str, input_def)
+        try:
+            r = self.urls[path]
+            if len(r) == 1 or method in r[1] or 'AUTO' in r[1]:
+                try:
+                    import_str = r[0].split('.')[-1]
+                    from_str = r[0][:-(len(import_str)+1)]
+                    if len(r) == 1 or method in r[1]:
+                        exec 'from {} import {}'.format(from_str, import_str)
                         try:
-                            if type(mydef) == type({}):
-                                return self.res_text(json.dumps(mydef), headers=[('Content-type', 'application/json')])
+                            request = Request(self.environ)
+                            exec 'mydef={}(request)'.format(import_str)
                         except:
-                            pass
+
+                            exec 'mydef={}()'.format(import_str)
+                    elif 'AUTO' in r[1]:
+                        if method == 'GET':
+                            input_def = 'get'
+                        elif method == 'POST':
+                            input_def = 'post'
+                        elif method == 'PUT':
+                            input_def = 'put'
+                        exec 'from {} import {}'.format(from_str, import_str)
                         try:
-                            if type(mydef) == type([]):
-                                try:
-                                    res = mydef[0]['res']
-                                except:
-                                    res = None
-                                try:
-                                    status = mydef[0]['status']
-                                except:
-                                    status = None
-                                try:
-                                    headers = mydef[0]['headers']
-                                except:
-                                    headers = None
-                                return self.res_text(res, status, headers)
+                            request = Request(self.environ)
+                            exec 'mydef={}().{}(request)'.format(import_str, input_def)
+
                         except:
-                            pass
+
+                            exec 'mydef={}().{}()'.format(import_str, input_def)
+
+                    if type(mydef) is type(dict):
+                        return self.res_text(json.dumps(mydef), headers=[('Content-type', 'application/json')])
+
+                    elif type(mydef) is type(LawDict()):
+                        try:
+                            res = mydef['res']
+                        except:
+                            res = None
+                        try:
+                            status = mydef['status']
+                        except:
+                            status = None
+                        try:
+                            headers = mydef['headers']
+                        except:
+                            headers = None
+                        return self.res_text(res, status, headers)
+                    else:
                         return self.res_text(mydef)
-                    except Exception as e:
-                        if self.debug in [False, '', None]:
-                            return self.error_code()
-                        else:
-                            return self.res_text(str(e))
-                else:
-                    return self.method_not_allowed()
+                except Exception as e:
+                    if self.debug in [False, '', None]:
+                        return self.error_code()
+                    else:
+                        return self.res_text(str(e))
+            else:
+                return self.method_not_allowed()
+        except:
+            pass
         return self.not_found()
 
     def res_text(self, res=None, status=None, headers=None):
         if status is None:
-            status='200 OK'
+            status = '200 OK'
         if headers is None:
-            if type(res) == type({}):
+            if isinstance(res, dict):
                 res = json.dumps(res)
-                headers=[('Content-type', 'application/json')]
+                headers = [('Content-type', 'application/json')]
             else:
-                headers=[('Content-type', 'text/plain')]
+                headers = [('Content-type', 'text/plain')]
         self.start(status, headers)
         if res is None:
             yield ''
         else:
-            if type(unicode()) == type(res):
+            if isinstance(res, unicode):
                 res = res.encode('utf-8')
             yield res
 
