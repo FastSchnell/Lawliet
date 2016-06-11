@@ -35,17 +35,26 @@ def set_route(r):
             exec 'mydef={}().get()'.format(import_str)
             exec "Route.get_route[r[0]] = ['func', {}().get]".format(import_str)
         except:
-            exec "Route.get_route[r[0]] = ['func_request', {}().get]".format(import_str)
+            try:
+                exec "Route.get_route[r[0]] = ['func_request', {}().get]".format(import_str)
+            except:
+                pass
         try:
             exec 'mydef={}().post()'.format(import_str)
             exec "Route.post_route[r[0]] = ['func', {}().post]".format(import_str)
         except:
-            exec "Route.post_route[r[0]] = ['func_request', {}().post]".format(import_str)
+            try:
+                exec "Route.post_route[r[0]] = ['func_request', {}().post]".format(import_str)
+            except:
+                pass
         try:
             exec 'mydef={}().put()'.format(import_str)
             exec "Route.put_route[r[0]] = ['func', {}().put]".format(import_str)
         except:
-            exec "Route.put_route[r[0]] = ['func_request', {}().put]".format(import_str)
+            try:
+                exec "Route.put_route[r[0]] = ['func_request', {}().put]".format(import_str)
+            except:
+                pass
     elif len(r) == 3:
         for i in r[2]:
             if i == 'GET':
