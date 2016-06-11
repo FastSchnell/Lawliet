@@ -1,8 +1,7 @@
-#from lawliet.response import response
 from lawliet import Response, redirect, abort, Cache
 
 xml_str = u"""
- <xml>
+<xml>
  <ToUserName><![CDATA[toUser]]></ToUserName>
  <FromUserName><![CDATA[fromUser]]></FromUserName>
  <CreateTime>1348831860</CreateTime>
@@ -15,11 +14,11 @@ xml_str = u"""
 
 def ping():
     Cache.set('ok', 'test')
-    Cache.expire('ok', 50)
+    Cache.expire('ok', 5)
 
 
 def res_json(request):
-    return '{}{}'.format(request.get('qqq'), request.get('ok'))
+    return {1: 2222}
 
 
 def test_response():

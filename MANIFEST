@@ -5,6 +5,7 @@ lawliet/app.py
 lawliet/request.py
 lawliet/handler/__init__.py
 lawliet/handler/response.py
+lawliet/handler/route_dict.py
 lawliet/tools/__init__.py
 lawliet/tools/_cache.py
 lawliet/tools/cache.py

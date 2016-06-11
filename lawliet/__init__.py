@@ -29,7 +29,7 @@ def jsons(str):
 
 class Routes(object):
     def __init__(self, *args):
-        Route.urls = tuple_dict(args)
+        tuple_dict(args)
 
 
 class Cache(DoCache):

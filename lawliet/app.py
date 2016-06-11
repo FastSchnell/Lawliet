@@ -7,7 +7,9 @@ from .handler.response import LawDict
 class Route(object):
     """这是url调度功能"""
     debug = False
-    urls = dict()
+    get_route = dict()
+    post_route = dict()
+    put_route = dict()
 
     def __init__(self, environ, start_response):
         self.environ = environ
@@ -20,64 +22,59 @@ class Route(object):
         #print self.environ
 
         try:
-            r = self.urls[path]
-            if len(r) == 1 or method in r[1] or 'AUTO' in r[1]:
-                try:
-                    import_str = r[0].split('.')[-1]
-                    from_str = r[0][:-(len(import_str)+1)]
-                    if len(r) == 1 or method in r[1]:
-                        exec 'from {} import {}'.format(from_str, import_str)
-                        try:
-                            request = Request(self.environ)
-                            exec 'mydef={}(request)'.format(import_str)
-                        except:
-
-                            exec 'mydef={}()'.format(import_str)
-                    elif 'AUTO' in r[1]:
-                        if method == 'GET':
-                            input_def = 'get'
-                        elif method == 'POST':
-                            input_def = 'post'
-                        elif method == 'PUT':
-                            input_def = 'put'
-                        exec 'from {} import {}'.format(from_str, import_str)
-                        try:
-                            request = Request(self.environ)
-                            exec 'mydef={}().{}(request)'.format(import_str, input_def)
-
-                        except:
-
-                            exec 'mydef={}().{}()'.format(import_str, input_def)
-
-                    if type(mydef) is type(dict):
-                        return self.res_text(json.dumps(mydef), headers=[('Content-type', 'application/json')])
-
-                    elif type(mydef) is type(LawDict()):
-                        try:
-                            res = mydef['res']
-                        except:
-                            res = None
-                        try:
-                            status = mydef['status']
-                        except:
-                            status = None
-                        try:
-                            headers = mydef['headers']
-                        except:
-                            headers = None
-                        return self.res_text(res, status, headers)
-                    else:
-                        return self.res_text(mydef)
-                except Exception as e:
-                    if self.debug in [False, '', None]:
-                        return self.error_code()
-                    else:
-                        return self.res_text(str(e))
+            try:
+                if method == 'GET':
+                    route_list = self.get_route[path]
+                elif method == 'POST':
+                    route_list = self.post_route[path]
+                elif method == 'PUT':
+                    route_list = self.put_route[path]
+                else:
+                    return self.method_not_allowed()
+            except:
+                return self.not_found()
+            request = Request(self.environ)
+            if route_list[0] == 'func_request':
+                mydef = route_list[1](request)
+            elif route_list[0] == 'func':
+                mydef = route_list[1]()
+            elif route_list[0] == 'cache':
+                if path.split('.')[-1] == 'css':
+                    header = [('Content-type', 'text/css')]
+                elif path.split('.')[-1] == 'html':
+                    header = [('Content-type', 'text/html')]
+                elif path.split('.')[-1] == 'js':
+                    header = [('Content-type', 'text/javascript')]
+                else:
+                    header = [('Content-type', 'text/plain')]
+                return self.res_text(str(self.get_route[path]), headers=header)
             else:
-                return self.method_not_allowed()
-        except:
-            pass
-        return self.not_found()
+                raise
+
+            if type(mydef) is type(dict):
+                return self.res_text(json.dumps(mydef), headers=[('Content-type', 'application/json')])
+
+            elif type(mydef) is type(LawDict()):
+                try:
+                    res = mydef['res']
+                except:
+                    res = None
+                try:
+                    status = mydef['status']
+                except:
+                    status = None
+                try:
+                    headers = mydef['headers']
+                except:
+                    headers = None
+                return self.res_text(res, status, headers)
+            else:
+                return self.res_text(mydef)
+        except Exception as e:
+            if self.debug in [False, '', None]:
+                return self.error_code()
+            else:
+                return self.res_text(str(e))
 
     def res_text(self, res=None, status=None, headers=None):
         if status is None:
