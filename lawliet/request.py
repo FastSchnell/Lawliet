@@ -23,7 +23,7 @@ class Request(object):
             return None
 
     def headers(self, header):
-        http_header = re.sub('-','_',header).upper()
+        http_header = re.sub('-', '_', header).upper()
         if http_header == 'CONTENT_TYPE':
             try:
                 return self.environ[http_header]
