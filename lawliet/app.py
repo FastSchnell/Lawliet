@@ -18,9 +18,6 @@ class Route(object):
     def __iter__(self):
         path = self.environ['PATH_INFO']
         method = self.environ['REQUEST_METHOD']
-
-        #print self.environ
-
         try:
             try:
                 if method == 'GET':
@@ -34,16 +31,18 @@ class Route(object):
             except:
                 return self.not_found()
             request = Request(self.environ)
-            if route_list[0] == 'func_request':
+            func_name = route_list[0]
+            if func_name == 'func_request':
                 mydef = route_list[1](request)
-            elif route_list[0] == 'func':
+            elif func_name == 'func':
                 mydef = route_list[1]()
-            elif route_list[0] == 'cache':
-                if path.split('.')[-1] == 'css':
+            elif func_name == 'cache':
+                static_type = path.split('.')[-1]
+                if static_type == 'css':
                     header = [('Content-type', 'text/css')]
-                elif path.split('.')[-1] == 'html':
+                elif static_type == 'html':
                     header = [('Content-type', 'text/html')]
-                elif path.split('.')[-1] == 'js':
+                elif static_type == 'js':
                     header = [('Content-type', 'text/javascript')]
                 else:
                     header = [('Content-type', 'text/plain')]
@@ -52,7 +51,8 @@ class Route(object):
                 raise
 
             if type(mydef) is type(dict):
-                return self.res_text(json.dumps(mydef), headers=[('Content-type', 'application/json')])
+                return self.res_text(json.dumps(mydef),
+                                     headers=[('Content-type', 'application/json')])
 
             elif type(mydef) is type(LawDict()):
                 try:
