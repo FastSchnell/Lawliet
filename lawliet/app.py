@@ -46,7 +46,7 @@ class Route(object):
                     header = [('Content-type', 'text/javascript')]
                 else:
                     header = [('Content-type', 'text/plain')]
-                return self.res_text(str(self.get_route[path]), headers=header)
+                return self.res_text(str(self.get_route[path][1]), headers=header)
             else:
                 raise
 
@@ -74,7 +74,7 @@ class Route(object):
             if self.debug in [False, '', None]:
                 return self.error_code()
             else:
-                return self.res_text(str(e))
+                return self.res_text(repr(e))
 
     def res_text(self, res=None, status=None, headers=None):
         if status is None:
