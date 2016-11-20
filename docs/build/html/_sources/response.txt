@@ -3,16 +3,14 @@ Response
 
 Response Json
 _____________
-
-  .. sourcecode::
+::
 
       def hello_world():
           return {'msg': 'Hello, World!'}
 
 Response XML
 ____________
-
-  .. sourcecode::
+::
 
       from lawliet import Response
       xml_str = '<xml>..</xml>'
@@ -21,8 +19,7 @@ ____________
 
 Response HTML
 _____________
-
-  .. sourcecode::
+::
 
       from lawliet import Response
       def hello_world():

@@ -1,7 +1,6 @@
 Routing
 =======
-
-  .. sourcecode::
+::
 
       Routes(
           ['/', 'index', ['GET']]

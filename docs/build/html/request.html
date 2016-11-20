@@ -23,7 +23,6 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="lawliet 2.3.5 documentation" href="lawliet.html" />
@@ -48,23 +47,31 @@
 <h1>Request<a class="headerlink" href="#request" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="get-url-params">
 <h2>Get URL Params<a class="headerlink" href="#get-url-params" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div></div></blockquote>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_url_params</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
+    <span class="n">url_values</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;key&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="get-json">
 <h2>Get Json<a class="headerlink" href="#get-json" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div></div></blockquote>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_json_params</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
+    <span class="n">json_values</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="s1">&#39;json&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="get-http-header-params">
 <h2>Get Http Header Params<a class="headerlink" href="#get-http-header-params" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div></div></blockquote>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_header_params</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
+    <span class="n">origin</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">headers</span><span class="p">(</span><span class="s1">&#39;Origin&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="get-all-params">
 <h2>Get All Params<a class="headerlink" href="#get-all-params" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div></div></blockquote>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_all</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
+    <span class="n">origin</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">environ</span>
+</pre></div>
+</div>
 </div>
 </div>
 
