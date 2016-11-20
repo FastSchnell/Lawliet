@@ -3,8 +3,7 @@ Quickstart
 
 A Lawliet Application
 _____________________
-
-  .. sourcecode::
+::
 
       from lawliet import Routes, app
 
@@ -14,3 +13,4 @@ _____________________
       Routes(['/', 'index'])
       if __name__ == '__main__':
           app.run()
+
