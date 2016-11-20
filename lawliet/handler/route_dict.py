@@ -17,6 +17,8 @@ def set_route(r):
         f.close()
         Route.get_route[r[0]] = ['cache', output]
         return
+    if len(r[1].split('.')) == 1:
+        r[1] = '__main__.' + r[1]
     import_str = r[1].split('.')[-1]
     from_str = r[1][:-(len(import_str)+1)]
     exec 'from {} import {}'.format(from_str, import_str)
