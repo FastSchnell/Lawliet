@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 import json
+import logging
 from .request import Request
 from .handler.response import LawDict
+
+logger = logging.getLogger(__name__)
 
 
 class Route(object):
@@ -55,23 +58,17 @@ class Route(object):
                                      headers=[('Content-type', 'application/json')])
 
             elif type(mydef) is type(LawDict()):
-                try:
-                    res = mydef['res']
-                except:
-                    res = None
-                try:
-                    status = mydef['status']
-                except:
-                    status = None
-                try:
-                    headers = mydef['headers']
-                except:
-                    headers = None
+
+                res = mydef.get('res', None)
+                status = mydef.get('status', None)
+                headers = mydef.get('headers', None)
+
                 return self.res_text(res, status, headers)
             else:
                 return self.res_text(mydef)
         except Exception as e:
-            if self.debug in [False, '', None]:
+            logger.exception(repr(e))
+            if not self.debug:
                 return self.error_code()
             else:
                 return self.res_text(repr(e))
