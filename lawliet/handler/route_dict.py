@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import re
 from lawliet import Route
 from lawliet.tools import SetPath
