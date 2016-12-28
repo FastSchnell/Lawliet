@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 status_dict = {400: '400 BAD REQUEST', 403: '403 FORBIDDEN',
                404: '404 NOT FOUND', 405: '405 METHOD NOT ALLOWED',
                500: '500 INTERNAL SERVER ERROR'}
