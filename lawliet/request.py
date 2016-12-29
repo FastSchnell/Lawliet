@@ -6,6 +6,8 @@ from .handler import json_loads
 from .handler.form import (
     form_data,
     File,
+    UseTemp,
+    Temp,
 )
 
 
@@ -27,6 +29,7 @@ class Request(object):
         self._file = dict()
         self._json = dict()
         self._param = dict()
+        self.is_temp = False
 
     def header(self, header):
         http_header = re.sub('-', '_', header).upper()
@@ -67,25 +70,37 @@ class Request(object):
             for name, file_list in _file.items():
                 self._file[name] = File(file_list)
 
-    def file(self, name, max_length=None):
+    def file(self, name, max_length=None, use_temp=False):
         if max_length is not None and max_length < self.content_length:
             raise MaxLengthError()
 
         if self._form or self._file:
-            return self._file.get(name, None)
+            if self.is_temp:
+                return Temp(self._file.get(name, None))
+            else:
+                return self._file.get(name, None)
         else:
-            self._init_form()
-            return self._file.get(name, None)
+            if use_temp:
+                self.is_temp = True
+                self._form, self._file = UseTemp(self.environ).run()
+                return Temp(self._file.get(name, None))
+            else:
+                self._init_form()
+                return self._file.get(name, None)
 
-    def form(self, name, max_length=None):
+    def form(self, name, max_length=None, use_temp=False):
         if max_length is not None and max_length < self.content_length:
             raise MaxLengthError()
 
         if self._form or self._file:
             return self._form.get(name, None)
         else:
-            self._init_form()
-            return self._file.get(name, None)
+            if use_temp:
+                self.is_temp = True
+                self._form, self._file = UseTemp(self.environ).run()
+            else:
+                self._init_form()
+            return self._form.get(name, None)
 
     def json(self, max_length=None):
         if max_length is not None and max_length < self.content_length:
