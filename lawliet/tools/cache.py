@@ -16,7 +16,7 @@ class DoCache(object):
                 return a[0]
             else:
                 return None
-        except:
+        except (KeyError, IndexError):
             return None
 
     @classmethod
@@ -26,14 +26,15 @@ class DoCache(object):
                 times = int(time.time()) + int(times)
             CACHE[key] = [value, times]
         except:
-            class CacheSetError(Exception): pass
-            raise CacheSetError
+            class CacheSetError(Exception):
+                pass
+            raise CacheSetError()
 
     @classmethod
     def delete(cls, key):
         try:
             CACHE.pop(key)
-        except:
+        except IndexError:
             pass
 
     @classmethod
@@ -43,8 +44,9 @@ class DoCache(object):
             a[1] = int(time.time()) + int(times)
             CACHE[key] = a
         except:
-            class CacheExpireError(Exception): pass
-            raise CacheExpireError
+            class CacheExpireError(Exception):
+                pass
+            raise CacheExpireError()
 
     @classmethod
     def id(cls):

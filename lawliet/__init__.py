@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from .app import Route
-from .handler.response import Res
+from .handler.response import response
 from .handler.route_dict import tuple_dict
 from .tools.cache import DoCache
 from .tools._cache import _DoCache
@@ -8,7 +8,7 @@ from .tools.json_loads import str_json
 
 
 def Response(res=None, status=None, headers=None):
-    return Res(res, status, headers).response()
+    response(res, status, headers)
 
 
 def abort(code, res=None):
@@ -16,11 +16,11 @@ def abort(code, res=None):
         res = {"errcode": 404, "errmsg": "page not find"}
     elif code == 500:
         res = {"errcode": 500, "errmsg": "page error"}
-    return Response(res=res, status=code)
+    Response(res=res, status=code)
 
 
 def redirect(url):
-    return Response(status=301, headers={"Location": url})
+    Response(status=301, headers={"Location": url})
 
 
 def jsons(str):

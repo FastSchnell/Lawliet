@@ -13,9 +13,8 @@ def set_route(r):
     if re.search(r'/', r[1]):
         if SetPath.app_path is None:
             return
-        f = open(SetPath.app_path+r[1], 'rb')
-        output = f.read()
-        f.close()
+        with open(SetPath.app_path+r[1], 'rb') as f:
+            output = f.read()
         Route.get_route[r[0]] = ['cache', output]
         return
     if len(r[1].split('.')) == 1:
