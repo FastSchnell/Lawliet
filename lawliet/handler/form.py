@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
+import tempfile
 
 
-def _content_type_split(content_type):
+def _boundary(content_type):
     parts = content_type.split(';')
     if parts[0] == 'multipart/form-data':
         boundary = parts[1].lstrip()
@@ -10,7 +11,7 @@ def _content_type_split(content_type):
         return False
 
 
-def _get_input(file_input, end_boundary):
+def _input(file_input, end_boundary):
     line = file_input.readline()
     while True:
         if line == end_boundary:
@@ -24,26 +25,25 @@ def _get_input(file_input, end_boundary):
 class File(object):
 
     def __init__(self, file_list):
+        self.file_name = file_list[1]["file_name"]
         file_list[-1] = file_list[-1].rstrip()
         self.data = file_list[4:]
-        self.buf = '\r\n'
 
     def __enter__(self):
-        return self
+        self.temp = tempfile.TemporaryFile()
+        self.temp.write(self.read())
+        self.temp.seek(0)
+        return self.temp
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        self.temp.close()
         if exc_type or exc_val or exc_tb:
             return True
 
     def read(self):
-        all_data = ''
-        for line in self.data:
-            all_data += line
-        return all_data
+        return ''.join(self.data)
 
     def readline(self):
-        # ['begin', {'type':'file','name':'test','file':'ss.txt'},
-        # 'Content-Type: text/x-python-script\r\n', '\r\n']
         if len(self.data) == 0:
             return ''
         else:
@@ -51,7 +51,7 @@ class File(object):
 
 
 def form_data(environ):
-    boundary = _content_type_split(environ['CONTENT_TYPE'])
+    boundary = _boundary(environ['CONTENT_TYPE'])
     _form = dict()
     _file = dict()
     if not boundary:
@@ -59,7 +59,7 @@ def form_data(environ):
     real_boundary = '--' + boundary + '\r\n'
     end_boundary = '--' + boundary + '--\r\n'
     cache = []
-    for line in _get_input(environ['wsgi.input'], end_boundary):
+    for line in _input(environ['wsgi.input'], end_boundary):
         if line == real_boundary:
             if not cache:
                 cache.append('begin')

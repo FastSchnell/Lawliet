@@ -60,19 +60,12 @@ class Request(object):
     def environ(self):
         return self.environ
 
-    def _format_form_data(self, _form, _file):
+    def _init_form(self):
+        _form, _file = form_data(self.environ)
         self._form = _form
         if _file:
-            for name in _file:
-                self._file[name] = File(_file[name])
-
-    def _get_file(self):
-        _form, _file = form_data(self.environ)
-        self._format_form_data(_form, _file)
-
-    def _get_form(self):
-        _form, _file = form_data(self.environ)
-        self._format_form_data(_form, _file)
+            for name, file_list in _file.items():
+                self._file[name] = File(file_list)
 
     def file(self, name, max_length=None):
         if max_length is not None and max_length < self.content_length:
@@ -81,7 +74,7 @@ class Request(object):
         if self._form or self._file:
             return self._file.get(name, None)
         else:
-            self._get_file()
+            self._init_form()
             return self._file.get(name, None)
 
     def form(self, name, max_length=None):
@@ -91,7 +84,7 @@ class Request(object):
         if self._form or self._file:
             return self._form.get(name, None)
         else:
-            self._get_form()
+            self._init_form()
             return self._file.get(name, None)
 
     def json(self, max_length=None):
