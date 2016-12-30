@@ -2,7 +2,7 @@
 import time
 
 
-class _DoCache(object):
+class PrivateCache(object):
     """私有缓存"""
 
     def __init__(self):

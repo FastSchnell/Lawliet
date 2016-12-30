@@ -3,8 +3,12 @@ from .app import Route
 from .handler.response import response
 from .handler.route_dict import tuple_dict
 from .tools.cache import DoCache
-from .tools._cache import _DoCache
+from .tools.private_cache import PrivateCache
 from .tools.json_loads import str_json
+from .handler.db import (
+    InitSession,
+    LawSession,
+)
 
 
 def Response(res=None, status=None, headers=None):
@@ -23,8 +27,8 @@ def redirect(url):
     Response(status=301, headers={"Location": url})
 
 
-def jsons(str):
-    return str_json(str)
+def jsons(data):
+    return str_json(data)
 
 
 class Routes(object):
@@ -36,5 +40,12 @@ class Cache(DoCache):
     pass
 
 
-class _Cache(_DoCache):
+class _Cache(PrivateCache):
     pass
+
+
+class DBSession(LawSession):
+    @classmethod
+    def init_session(cls, db_session, exc):
+        InitSession.db_session = db_session
+        InitSession.exc = exc

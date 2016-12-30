@@ -92,7 +92,7 @@ class Route(object):
         else:
             if isinstance(res, unicode):
                 res = res.encode('utf-8')
-            elif type(res) in (type(int()), type(float())):
+            elif isinstance(res, (int, float, long)):
                 res = str(res)
             yield res
 
