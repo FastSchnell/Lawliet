@@ -37,8 +37,6 @@ class File(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.temp.close()
-        if exc_type or exc_val or exc_tb:
-            return True
 
     def read(self):
         return ''.join(self.data)
@@ -52,9 +50,9 @@ class File(object):
 
 class Temp(object):
 
-    def __init__(self, temp_tuple):
-        self.file_name = temp_tuple[1]
-        self.temp = temp_tuple[0]
+    def __init__(self, temp_file):
+        self.file_name = temp_file[1]
+        self.temp = temp_file[0]
 
     def __enter__(self):
         return self.temp
@@ -72,7 +70,8 @@ def form_data(environ):
     real_boundary = '--' + boundary + '\r\n'
     end_boundary = '--' + boundary + '--\r\n'
     cache = []
-    for line in _input(environ['wsgi.input'], end_boundary):
+    output = environ.pop('wsgi.input')
+    for line in _input(output, end_boundary):
         if line == real_boundary:
             if not cache:
                 cache.append('begin')
@@ -135,7 +134,8 @@ class UseTemp(object):
         real_boundary = '--' + self.boundary + '\r\n'
         end_boundary = '--' + self.boundary + '--\r\n'
         cache = []
-        for line in _input(self.environ['wsgi.input'], end_boundary):
+        output = self.environ.pop('wsgi.input')
+        for line in _input(output, end_boundary):
             if line == real_boundary:
                 if not cache:
                     cache.append('begin')

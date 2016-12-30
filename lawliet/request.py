@@ -15,6 +15,13 @@ class MaxLengthError(Exception):
     pass
 
 
+def _open(temp_file):
+    if isinstance(temp_file, tuple):
+        return Temp(temp_file)
+    else:
+        return None
+
+
 class Request(object):
 
     """获取传递数据"""
@@ -41,23 +48,23 @@ class Request(object):
             return self.environ.get(http_header, None)
 
     def get(self, param, max_length=None):
-        if self._param:
-            return self._param.get(param, None)
-
-        query_string = self.environ['QUERY_STRING'].split('&')
-        for data in query_string:
-            key_value = data.split('=')
-            if len(key_value) == 2:
-                self._param[unquote(key_value[0])] = unquote(key_value[1])
-        if self.content_type == 'application/x-www-form-urlencoded':
-            if max_length is not None and max_length < self.content_length:
-                raise MaxLengthError()
-            wsgi_file = self.environ['wsgi.input'].read(self.content_length)
-            query_string = wsgi_file.split('&')
+        if not self._param:
+            query_string = self.environ['QUERY_STRING'].split('&')
             for data in query_string:
                 key_value = data.split('=')
                 if len(key_value) == 2:
                     self._param[unquote(key_value[0])] = unquote(key_value[1])
+
+            if self.content_type == 'application/x-www-form-urlencoded':
+                if max_length is not None and max_length < self.content_length:
+                    raise MaxLengthError()
+                output = self.environ.pop('wsgi.input')
+                wsgi_file = output.read(self.content_length)
+                query_string = wsgi_file.split('&')
+                for data in query_string:
+                    key_value = data.split('=')
+                    if len(key_value) == 2:
+                        self._param[unquote(key_value[0])] = unquote(key_value[1])
         return self._param.get(param, None)
 
     def environ(self):
@@ -76,14 +83,14 @@ class Request(object):
 
         if self._form or self._file:
             if self.is_temp:
-                return Temp(self._file.get(name, None))
+                return _open(self._file.get(name, None))
             else:
                 return self._file.get(name, None)
         else:
             if use_temp:
                 self.is_temp = True
                 self._form, self._file = UseTemp(self.environ).run()
-                return Temp(self._file.get(name, None))
+                return _open(self._file.get(name, None))
             else:
                 self._init_form()
                 return self._file.get(name, None)
@@ -107,7 +114,9 @@ class Request(object):
             raise MaxLengthError()
 
         if self.content_type == 'application/json':
-            self._json = json_loads(self.environ['wsgi.input'].read(self.content_length))
+            if not self._json:
+                output = self.environ.pop('wsgi.input')
+                self._json = json_loads(output.read(self.content_length))
         return self._json
 
     def data(self):
