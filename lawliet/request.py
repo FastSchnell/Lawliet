@@ -28,10 +28,8 @@ class Request(object):
 
     def __init__(self, environ):
         self.environ = environ
-        self.content_type = self.environ['CONTENT_TYPE']
-        self.content_length = 0
-        if self.environ['CONTENT_LENGTH']:
-            self.content_length = int(self.environ['CONTENT_LENGTH'])
+        self.content_type = self.environ.get('CONTENT_TYPE', None)
+        self.content_length = int(self.environ.get('CONTENT_LENGTH', 0))
         self._form = dict()
         self._file = dict()
         self._json = dict()
