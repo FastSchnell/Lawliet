@@ -8,7 +8,7 @@ from distutils.core import setup
 
 setup(
     name='lawliet',
-    version='2.3.6',
+    version='2.4.0',
     description=u'这是一个给开源添乱的项目',
     author='Monomer Xu',
     author_email='fing@easymail.com.cn',

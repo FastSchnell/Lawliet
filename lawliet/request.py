@@ -28,10 +28,9 @@ class Request(object):
 
     def __init__(self, environ):
         self.environ = environ
-        self.content_type = self.environ['CONTENT_TYPE']
-        self.content_length = 0
-        if self.environ['CONTENT_LENGTH']:
-            self.content_length = int(self.environ['CONTENT_LENGTH'])
+        self.content_type = self.environ.get('CONTENT_TYPE', None)
+        self.content_length = self.environ.get('CONTENT_LENGTH') or 0
+        self.content_length = int(self.content_length)
         self._form = dict()
         self._file = dict()
         self._json = dict()
@@ -47,7 +46,7 @@ class Request(object):
             http_header = 'HTTP_' + http_header
             return self.environ.get(http_header, None)
 
-    def get(self, param, max_length=None):
+    def get(self, name, max_length=None):
         if not self._param:
             query_string = self.environ['QUERY_STRING'].split('&')
             for data in query_string:
@@ -65,10 +64,7 @@ class Request(object):
                     key_value = data.split('=')
                     if len(key_value) == 2:
                         self._param[unquote(key_value[0])] = unquote(key_value[1])
-        return self._param.get(param, None)
-
-    def environ(self):
-        return self.environ
+        return self._param.get(name, None)
 
     def _init_form(self):
         _form, _file = form_data(self.environ)
@@ -109,7 +105,7 @@ class Request(object):
                 self._init_form()
             return self._form.get(name, None)
 
-    def json(self, max_length=None):
+    def json(self, name=None, max_length=None):
         if max_length is not None and max_length < self.content_length:
             raise MaxLengthError()
 
@@ -117,10 +113,10 @@ class Request(object):
             if not self._json:
                 output = self.environ.pop('wsgi.input')
                 self._json = json_loads(output.read(self.content_length))
-        return self._json
-
-    def data(self):
-        return self.json()
+        if name is None:
+            return self._json
+        else:
+            return self._json.get(name, None)
 
     def headers(self, header):
         return self.header(header)
