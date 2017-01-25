@@ -5,10 +5,7 @@ from .handler.route_dict import tuple_dict
 from .tools.cache import DoCache
 from .tools.private_cache import PrivateCache
 from .tools.json_loads import str_json
-from .handler.db import (
-    InitSession,
-    LawSession,
-)
+from .handler.db import LawSession
 
 
 def Response(res=None, status=None, headers=None):
@@ -46,6 +43,6 @@ class _Cache(PrivateCache):
 
 class DBSession(LawSession):
     @classmethod
-    def init_session(cls, db_session, exc):
-        InitSession.db_session = db_session
-        InitSession.exc = exc
+    def init_all(cls, db_session, exc):
+        cls.init_session = db_session
+        cls.init_exc = exc
