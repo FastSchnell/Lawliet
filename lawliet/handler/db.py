@@ -1,17 +1,20 @@
 # -*- coding: utf-8 -*-
 
 
-class InitSession(object):
-    db_session = None
-    exc = None
+class SessionEmptyError(Exception):
+    pass
 
 
 class LawSession(object):
+    init_session = None
+    init_exc = None
 
-    def __init__(self, no_raise=False):
-        self.DBSession = InitSession.db_session
-        self.exc = InitSession.exc
-        self.bool = no_raise
+    def __init__(self, is_raise=True):
+        if not (self.init_session and self.init_exc):
+            raise SessionEmptyError()
+        self.DBSession = self.init_session
+        self.exc = self.init_exc
+        self.bool = not is_raise
 
     def __enter__(self):
         self.session = self.DBSession()
