@@ -12,20 +12,27 @@
 
 <h2>Hello World</h2>
 
-      from lawliet import Routes, app
+      >>>from lawliet.tool import hello
+      >>>hello('Hello World!')
+      running ==> http://127.0.0.1:5000/
 
-      def index():
-          return 'Hello, World!'
-
-      Routes(['/', 'index'])
-      if __name__ == '__main__':
-          app.run()
 
 <h2>url映射</h2>
 
-   Routes(['url路径', '目录路径']),  多个url映射如下
+   Url(['url路径', func, [method方法]]),  多个url映射如下
 
-`Routes(['/', 'index'], ['/hello', 'test.hello.index'])`
+      from lawliet import Url, app
+      from lawliet.test import hello
+      
+      def index():
+          return 'Hello, World!'
+
+      Url(
+          ['/', index, ['GET']], 
+          ['/hello', hello, ['GET', 'POST']]
+      )
+      if __name__ == '__main__':
+          app.run()
 
 <h2>应答方式</h2>
 

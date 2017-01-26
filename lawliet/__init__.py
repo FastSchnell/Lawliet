@@ -6,6 +6,7 @@ from .tools.cache import DoCache
 from .tools.private_cache import PrivateCache
 from .tools.json_loads import str_json
 from .handler.db import LawSession
+from .handler.url import set_route
 
 
 def Response(res=None, status=None, headers=None):
@@ -31,6 +32,11 @@ def jsons(data):
 class Routes(object):
     def __init__(self, *args):
         tuple_dict(args)
+
+
+class Url(object):
+    def __init__(self, *args):
+        set_route(args)
 
 
 class Cache(DoCache):
