@@ -12,7 +12,7 @@
 
 <h2>Hello World</h2>
 
-      >>>from lawliet.tool import hello
+      >>>from lawliet.tools import hello
       >>>hello('Hello World!')
       running ==> http://127.0.0.1:5000/
 
