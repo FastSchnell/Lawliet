@@ -93,11 +93,12 @@
 <h3>通用获取方式 or 其他content_type类型的获取方式</h3>
 
 	def index(request):
-	    content_length = self.environ.get('CONTENT_LENGTH')
-	    content_type = self.environ.get('CONTENT_TYPE')
+	    content_length = request.environ.get('CONTENT_LENGTH')
+	    content_type = request.environ.get('CONTENT_TYPE')
 	    if content_type == 'application/xml':
-		    output = self.environ.pop('wsgi.input')
+		    output = request.environ.pop('wsgi.input')
 		    data = output.read(self.content_length)
+		    
 	 
 <h2>附录</h2>
 
@@ -105,12 +106,12 @@
 	 
 	#hello.py  
 	
-	from lawliet import Routes, Route
+	from lawliet import Url, Route
 	
 	def index():
 	  return 'Hello, World!'
 	  
-	Routes(['/', 'hello.index'])
+	Url(['/', index, ['GET']])
 
 ` gunicron -w4 -b127.0.0.1:5000 hello:Route` or `gunicorn -c gun.conf hello:Route`
 
