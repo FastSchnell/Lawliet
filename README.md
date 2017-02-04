@@ -81,9 +81,8 @@
    
 <h3>url参数</h3>
 
-	from urllib import unquote
 	def index(request):
-	    get_name = unquote(request.get('name'))
+	    get_name = request.get('name')
 
 <h3>header参数</h3>
     
