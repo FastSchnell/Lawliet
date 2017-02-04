@@ -46,7 +46,7 @@ class Request(object):
             http_header = 'HTTP_' + http_header
             return self.environ.get(http_header, None)
 
-    def get(self, name, max_length=None):
+    def get(self, name, default=None, max_length=None):
         if not self._param:
             query_string = self.environ['QUERY_STRING'].split('&')
             for data in query_string:
@@ -64,7 +64,7 @@ class Request(object):
                     key_value = data.split('=')
                     if len(key_value) == 2:
                         self._param[unquote(key_value[0])] = unquote(key_value[1])
-        return self._param.get(name, None)
+        return self._param.get(name, default)
 
     def _init_form(self):
         _form, _file = form_data(self.environ)
