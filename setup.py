@@ -12,7 +12,7 @@ setup(
     description='web framework',
     author='Monomer Xu',
     author_email='fing@easymail.com.cn',
-    url='https://github.com/fing520/Lawliet',
+    url='https://github.com/fastschnell/Lawliet',
     py_modules=['lawliet'],
     packages=['lawliet', 'lawliet.handler', 'lawliet.tools'],
     license='MIT',
