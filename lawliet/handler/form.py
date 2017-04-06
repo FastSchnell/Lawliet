@@ -30,7 +30,7 @@ class File(object):
         self.data = file_list[4:]
 
     def __enter__(self):
-        self.temp = tempfile.TemporaryFile()
+        self.temp = tempfile.NamedTemporaryFile()
         self.temp.write(self.read())
         self.temp.seek(0)
         return self.temp
@@ -126,7 +126,7 @@ class UseTemp(object):
         self.boundary = _boundary(environ['CONTENT_TYPE'])
         self._form = dict()
         self._file = dict()
-        self.temp = tempfile.TemporaryFile()
+        self.temp = tempfile.NamedTemporaryFile()
 
     def run(self):
         if not self.boundary:
@@ -155,7 +155,7 @@ class UseTemp(object):
             elif len(cache) == 1:
                 line_list = line.split(';')
                 if len(line_list) == 3:
-                    self.temp = tempfile.TemporaryFile()
+                    self.temp = tempfile.NamedTemporaryFile()
                     cache.append({
                         "type": "file",
                         "name": line_list[1].split('=')[1].strip()[1:-1],
