@@ -31,10 +31,7 @@ class PrivateCache(object):
             raise CacheSetError()
 
     def delete(self, key):
-        try:
-            self.CACHE.pop(key)
-        except IndexError:
-            pass
+        self.CACHE.pop(key, None)
 
     def expire(self, key, times):
         try:

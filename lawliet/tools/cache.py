@@ -32,10 +32,7 @@ class DoCache(object):
 
     @classmethod
     def delete(cls, key):
-        try:
-            CACHE.pop(key)
-        except IndexError:
-            pass
+        CACHE.pop(key, None)
 
     @classmethod
     def expire(cls, key, times):
