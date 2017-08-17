@@ -15,7 +15,7 @@ def _unicode2str(uni):
     if isinstance(uni, unicode):
         return uni.encode('utf-8')
     else:
-        return uni
+        return str(uni)
 
 
 def urlencode(kwargs):
