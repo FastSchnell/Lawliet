@@ -2,12 +2,27 @@
 
 import json as python_json
 import httplib
-import urllib
+import gzip
+import StringIO
 
 
 from lawliet.exc import (
     RequestsUrlError,
 )
+
+
+def _unicode2str(uni):
+    if isinstance(uni, unicode):
+        return uni.encode('utf-8')
+    else:
+        return uni
+
+
+def urlencode(kwargs):
+    return '&'.join([
+        _unicode2str(k) + '=' + _unicode2str(v)
+        for k, v in kwargs.items()
+    ])
 
 
 def _split_url(url):
@@ -52,15 +67,25 @@ class RequestsResponse(object):
         self.response = response
 
     def json(self):
-        return python_json.loads(self.response.read())
+        if self.headers.get('content-encoding') == 'gzip':
+            return python_json.loads(gzip.GzipFile(fileobj=StringIO.StringIO(self.response.read())).read())
+        else:
+            return python_json.loads(self.response.read())
 
     @property
     def content(self):
-        return self.response.read()
+        if self.headers.get('content-encoding') == 'gzip':
+            return gzip.GzipFile(fileobj=StringIO.StringIO(self.response.read())).read()
+        else:
+            return self.response.read()
 
     @property
     def status_code(self):
         return self.response.status
+
+    @property
+    def headers(self):
+        return {k: v for k, v in self.response.getheaders()}
 
 
 class Requests(object):
@@ -73,9 +98,21 @@ class Requests(object):
         else:
             http = httplib.HTTPConnection(host=host, port=port, timeout=timeout)
         if params:
-            path += '?%s' % urllib.urlencode(params)
+            path += '?%s' % urlencode(params)
 
-        http.request(method='GET', url=path, body=None, headers=headers or {})
+        if headers:
+            headers['accept'] = '*/*'
+            headers.update({
+                'accept': '*/*',
+                'connection': 'keep-alive',
+            })
+        else:
+            headers = {
+                'accept': '*/*',
+                'connection': 'keep-alive',
+            }
+
+        http.request(method='GET', url=path, body=None, headers=headers)
         return RequestsResponse(http.getresponse())
 
     @staticmethod
@@ -95,7 +132,7 @@ class Requests(object):
             body = None
 
         if params:
-            path += '?%s' % urllib.urlencode(params)
+            path += '?%s' % urlencode(params)
 
         http.request(method='POST', url=path, body=body, headers=headers or {})
         return RequestsResponse(http.getresponse())
@@ -116,7 +153,7 @@ class Requests(object):
             body = None
 
         if params:
-            path += '?%s' % urllib.urlencode(params)
+            path += '?%s' % urlencode(params)
 
         http.request(method='DELETE', url=path, body=body, headers=headers or {})
         return RequestsResponse(http.getresponse())
@@ -137,7 +174,7 @@ class Requests(object):
             body = None
 
         if params:
-            path += '?%s' % urllib.urlencode(params)
+            path += '?%s' % urlencode(params)
 
         http.request(method='PUT', url=path, body=body, headers=headers or {})
         return RequestsResponse(http.getresponse())
