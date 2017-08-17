@@ -5,6 +5,7 @@ from .handler.route_dict import tuple_dict
 from .tools.cache import DoCache
 from .tools.private_cache import PrivateCache
 from .tools.json_loads import str_json
+from .tools.requests import Requests
 from .handler.db import LawSession
 from .handler.url import set_route
 
@@ -25,7 +26,7 @@ def redirect(url):
     Response(status=301, headers={"Location": url})
 
 
-def jsons(data):
+def json(data):
     return str_json(data)
 
 
@@ -52,3 +53,5 @@ class DBSession(LawSession):
     def init_all(cls, db_session, exc):
         cls.init_session = db_session
         cls.init_exc = exc
+
+requests = Requests()  # fake python_requests
