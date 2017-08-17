@@ -8,7 +8,7 @@ from distutils.core import setup
 
 setup(
     name='lawliet',
-    version='2.4.3',
+    version='2.4.4',
     description='a web framework for Python',
     author='Monomer Xu',
     author_email='fing@easymail.com.cn',

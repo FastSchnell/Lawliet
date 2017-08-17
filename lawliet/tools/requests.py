@@ -73,10 +73,9 @@ class Requests(object):
         else:
             http = httplib.HTTPConnection(host=host, port=port, timeout=timeout)
         if params:
-            body = urllib.urlencode(params)
-        else:
-            body = None
-        http.request(method='GET', url=path, body=body, headers=headers or {})
+            path += '?%s' % urllib.urlencode(params)
+
+        http.request(method='GET', url=path, body=None, headers=headers or {})
         return RequestsResponse(http.getresponse())
 
     @staticmethod
@@ -86,17 +85,17 @@ class Requests(object):
             http = httplib.HTTPSConnection(host=host, port=port, timeout=timeout)
         else:
             http = httplib.HTTPConnection(host=host, port=port, timeout=timeout)
+
         if json:
             body = python_json.dumps(json)
             headers = {'content-type': 'application/json'}
         elif data:
             body = data
-
-        elif params:
-            body = urllib.urlencode(params)
-
         else:
             body = None
+
+        if params:
+            path += '?%s' % urllib.urlencode(params)
 
         http.request(method='POST', url=path, body=body, headers=headers or {})
         return RequestsResponse(http.getresponse())
@@ -113,12 +112,11 @@ class Requests(object):
             headers = {'content-type': 'application/json'}
         elif data:
             body = data
-
-        elif params:
-            body = urllib.urlencode(params)
-
         else:
             body = None
+
+        if params:
+            path += '?%s' % urllib.urlencode(params)
 
         http.request(method='DELETE', url=path, body=body, headers=headers or {})
         return RequestsResponse(http.getresponse())
@@ -135,12 +133,11 @@ class Requests(object):
             headers = {'content-type': 'application/json'}
         elif data:
             body = data
-
-        elif params:
-            body = urllib.urlencode(params)
-
         else:
             body = None
+
+        if params:
+            path += '?%s' % urllib.urlencode(params)
 
         http.request(method='PUT', url=path, body=body, headers=headers or {})
         return RequestsResponse(http.getresponse())
